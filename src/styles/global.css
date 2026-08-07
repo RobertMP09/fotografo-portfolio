@@ -1,1 +1,45 @@
 @import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --color-carbon: #0D0D0D;
+  --color-ivory: #F4F4F0;
+  --color-platinum: #C0C0C0;
+  --font-serif: "Playfair Display", "Cormorant Garamond", serif;
+  --font-sans: "Plus Jakarta Sans", Inter, sans-serif;
+}
+
+html {
+  background-color: #0D0D0D;
+  color: #F4F4F0;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .editorial-heading {
+  font-family: var(--font-serif);
+}
+
+.tracking-editorial {
+  letter-spacing: 0.15em;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.6s;
+}

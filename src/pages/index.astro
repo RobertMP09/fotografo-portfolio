@@ -1,17 +1,31 @@
 ---
-
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import aboutImage from '../assets/about-portrait.jpg';
 ---
+<Layout title="Inicio">
+  <Hero />
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+  <section class="px-6 md:px-10 py-24 grid md:grid-cols-2 gap-12">
+    <div class="reveal">
+      <p class="uppercase tracking-editorial text-platinum text-sm mb-4">Sobre mí</p>
+      <h2 class="editorial-heading text-4xl md:text-5xl leading-tight mb-6">
+        Diez años documentando historias reales
+      </h2>
+      <p class="text-ivory/70 leading-relaxed">
+        Mi trabajo combina la estética del fotoperiodismo con la sensibilidad editorial de una revista de moda.
+        Cada boda, retrato o evento se convierte en un ensayo visual con luz natural y composición asimétrica.
+      </p>
+    </div>
+    <div class="reveal">
+      <Image src={aboutImage} alt="Fotógrafo en sesión" class="w-full h-full object-cover" loading="lazy" widths={[400, 800]} sizes="(max-width: 768px) 100vw, 50vw" />
+    </div>
+  </section>
+
+  <section class="px-6 md:px-10 pb-12 reveal">
+    <h2 class="editorial-heading text-4xl mb-8">Servicios destacados</h2>
+  </section>
+  <Services />
+</Layout>

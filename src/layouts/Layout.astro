@@ -1,0 +1,46 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Navbar from '../components/Navbar.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Fotografía editorial de bodas, retratos y eventos.' } = Astro.props;
+---
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} · Estudio Fotográfico</title>
+    <ClientRouter />
+  </head>
+  <body class="bg-carbon text-ivory min-h-screen">
+    <Navbar />
+    <main transition:animate="fade">
+      <slot />
+    </main>
+
+    <script>
+      function initReveal() {
+        const items = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.15 }
+        );
+        items.forEach((item) => observer.observe(item));
+      }
+      document.addEventListener('astro:page-load', initReveal);
+    </script>
+  </body>
+</html>

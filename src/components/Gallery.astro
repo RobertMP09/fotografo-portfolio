@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+
+const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/gallery/*.{jpeg,jpg,png,webp}',
+  { eager: true }
+);
+
+function getCategory(filename: string): 'bodas' | 'retratos' | 'eventos' | 'otros' {
+  if (filename.includes('wedding')) return 'bodas';
+  if (filename.includes('portrait')) return 'retratos';
+  if (filename.includes('event')) return 'eventos';
+  return 'otros';
+}
+
+const photos = Object.entries(imageFiles).map(([path, mod]) => {
+  const filename = path.split('/').pop() ?? '';
+  return {
+    src: mod.default,
+    alt: filename.replace(/\.\w+$/, '').replace(/-/g, ' '),
+    category: getCategory(filename),
+  };
+});
+
+const categories = ['todos', 'bodas', 'retratos', 'eventos'];
+---
+<section class="px-6 md:px-10 py-24">
+  <div class="flex flex-wrap gap-6 mb-12 reveal">
+    {categories.map((cat) => (
+      <button
+        class="filter-btn uppercase text-sm tracking-widest text-ivory/60 hover:text-platinum data-[active=true]:text-platinum data-[active=true]:border-b border-platinum pb-1 transition-colors"
+        data-filter={cat}
+        data-active={cat === 'todos' ? 'true' : 'false'}
+      >
+        {cat}
+      </button>
+    ))}
+  </div>
+
+  <div id="masonry-grid" class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+    {photos.map((photo) => (
+      <button
+        class="gallery-item block w-full break-inside-avoid reveal"
+        data-category={photo.category}
+        data-alt={photo.alt}
+      >
+        <Image src={photo.src} alt={photo.alt} class="w-full h-auto object-cover hover:opacity-80 transition-opacity duration-300" loading="lazy" widths={[300, 600, 900]} sizes="(max-width: 768px) 100vw, 33vw" />
+      </button>
+    ))}
+  </div>
+
+  <div id="lightbox" class="fixed inset-0 bg-carbon/95 hidden items-center justify-center z-[100] p-6" role="dialog" aria-modal="true">
+    <button id="lightbox-close" class="absolute top-6 right-6 text-ivory text-3xl" aria-label="Cerrar">×</button>
+    <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-[90vw] object-contain" />
+  </div>
+</section>
+
+<script>
+  function initGallery() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const items = document.querySelectorAll<HTMLButtonElement>('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+    const closeBtn = document.getElementById('lightbox-close');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        buttons.forEach((b) => (b.dataset.active = 'false'));
+        btn.dataset.active = 'true';
+        items.forEach((item) => {
+          const show = filter === 'todos' || item.dataset.category === filter;
+          (item as HTMLElement).style.display = show ? 'block' : 'none';
+        });
+      });
+    });
+
+    items.forEach((item) => {
+      item.addEventListener('click', () => {
+        if (!lightbox || !lightboxImg) return;
+        const imgEl = item.querySelector('img');
+        lightboxImg.src = imgEl?.currentSrc || imgEl?.src || '';
+        lightboxImg.alt = item.dataset.alt || '';
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+      });
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      lightbox?.classList.add('hidden');
+      lightbox?.classList.remove('flex');
+    });
+  }
+  document.addEventListener('astro:page-load', initGallery);
+</script>

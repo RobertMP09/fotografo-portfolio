@@ -1,0 +1,44 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Contacto" description="Reserva tu sesión de fotografía.">
+  <section class="px-6 md:px-10 pt-32 pb-24 max-w-2xl mx-auto reveal">
+    <h1 class="editorial-heading text-5xl md:text-6xl mb-6">Reserva tu Sesión</h1>
+
+    <form id="contact-form" class="space-y-6 mt-10">
+      <div>
+        <label class="block uppercase text-xs tracking-widest text-ivory/60 mb-2">Nombre</label>
+        <input name="name" type="text" required class="w-full bg-transparent border-b border-platinum/40 py-3 focus:border-platinum outline-none" />
+      </div>
+      <div>
+        <label class="block uppercase text-xs tracking-widest text-ivory/60 mb-2">Email</label>
+        <input name="email" type="email" required class="w-full bg-transparent border-b border-platinum/40 py-3 focus:border-platinum outline-none" />
+      </div>
+      <div>
+        <label class="block uppercase text-xs tracking-widest text-ivory/60 mb-2">Tipo de sesión</label>
+        <select name="type" class="w-full bg-transparent border-b border-platinum/40 py-3 focus:border-platinum outline-none">
+          <option value="boda">Boda</option>
+          <option value="retrato">Retrato</option>
+          <option value="evento">Evento</option>
+        </select>
+      </div>
+      <div>
+        <label class="block uppercase text-xs tracking-widest text-ivory/60 mb-2">Mensaje</label>
+        <textarea name="message" rows="4" class="w-full bg-transparent border-b border-platinum/40 py-3 focus:border-platinum outline-none"></textarea>
+      </div>
+      <button type="submit" class="w-full border border-platinum py-4 uppercase text-sm tracking-widest hover:bg-platinum hover:text-carbon transition-colors duration-300">
+        Enviar Solicitud
+      </button>
+      <p id="form-success" class="text-platinum text-sm hidden">¡Gracias! Tu solicitud fue enviada.</p>
+    </form>
+  </section>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.classList.add('hidden');
+      document.getElementById('form-success')?.classList.remove('hidden');
+    });
+  </script>
+</Layout>
