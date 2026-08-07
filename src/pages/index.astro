@@ -17,42 +17,38 @@ const carouselPhotos = Object.entries(imageFiles).map(([path, mod]) => mod.defau
   <Hero />
 
   <!-- CARRUSEL ESTILO EDITORIAL -->
-  <section class="relative w-full py-16 bg-[#0D0D0D] group/section flex flex-col items-center">
+  <section class="relative w-full py-16 bg-[#0D0D0D] group/section flex flex-col items-center overflow-hidden">
     
-    <!-- Botón Anterior -->
-    <button id="prev-slide" class="absolute left-6 top-[45%] -translate-y-1/2 z-10 bg-[#0D0D0D]/70 hover:bg-platinum hover:text-carbon text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 opacity-0 group-hover/section:opacity-100 hidden md:block outline-none">
+    <button id="prev-slide" class="absolute left-6 top-[45%] -translate-y-1/2 z-20 bg-[#0D0D0D]/70 hover:bg-platinum hover:text-carbon text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 opacity-0 group-hover/section:opacity-100 hidden md:block outline-none">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path></svg>
     </button>
 
-    <!-- Contenedor del Carrusel (Oscurecido para descansar la vista) -->
-    <div id="carousel-track" class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-2 px-4 md:px-10 w-full">
+    <!-- Contenedor del Carrusel -->
+    <div id="carousel-track" class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 px-[7.5vw] md:px-[10vw] lg:px-[5vw] w-full">
       {carouselPhotos.map((photo, index) => (
-        <div class="snap-center shrink-0 w-[85vw] md:w-[45vw] lg:w-[33vw] h-[60vh] md:h-[70vh] relative group cursor-grab active:cursor-grabbing">
-          <!-- Usamos brightness-[0.4] para oscurecer la foto y que recupere luz al hacer hover -->
+        <div class="snap-center shrink-0 w-[85vw] md:w-[40vw] lg:w-[28vw] h-[60vh] md:h-[70vh] relative group cursor-grab active:cursor-grabbing">
           <Image 
             src={photo} 
             alt={`Fotografía destacada ${index + 1}`} 
-            class="w-full h-full object-cover brightness-[0.7] contrast-[1.1] group-hover:brightness-100 transition-all duration-700" 
+            class="w-full h-full object-cover brightness-[0.8] contrast-[1.1] group-hover:brightness-100 transition-all duration-700" 
             loading="lazy" 
             widths={[400, 800, 1200]} 
-            sizes="(max-width: 768px) 85vw, 33vw" 
+            sizes="(max-width: 768px) 85vw, (max-width: 1024px) 40vw, 28vw" 
           />
         </div>
       ))}
     </div>
 
-    <!-- Botón Siguiente -->
-    <button id="next-slide" class="absolute right-6 top-[45%] -translate-y-1/2 z-10 bg-[#0D0D0D]/70 hover:bg-platinum hover:text-carbon text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 opacity-0 group-hover/section:opacity-100 hidden md:block outline-none">
+    <button id="next-slide" class="absolute right-6 top-[45%] -translate-y-1/2 z-20 bg-[#0D0D0D]/70 hover:bg-platinum hover:text-carbon text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 opacity-0 group-hover/section:opacity-100 hidden md:block outline-none">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path></svg>
     </button>
-
-    <!-- Botón hacia la Galería -->
+    
     <div class="mt-12 z-10">
       <a href="/galeria" class="inline-block border border-platinum/50 text-platinum hover:bg-platinum hover:text-carbon uppercase tracking-[0.2em] text-sm py-4 px-10 transition-colors duration-300">
         Mirar Trabajos
       </a>
     </div>
-
+    
   </section>
 
   <section class="px-6 md:px-10 pb-12 pt-16 reveal">
@@ -61,16 +57,7 @@ const carouselPhotos = Object.entries(imageFiles).map(([path, mod]) => mod.defau
   <Services />
 </Layout>
 
-<style>
-  /* Ocultamos la barra de desplazamiento manteniendo la función de scroll */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-</style>
+
 
 <script>
   function initCarousel() {
@@ -80,15 +67,15 @@ const carouselPhotos = Object.entries(imageFiles).map(([path, mod]) => mod.defau
 
     if (!track) return;
 
-    // Calcula el salto en base al ancho de la pantalla actual
+    // Actualizamos las matemáticas de JS para que coincidan con los nuevos tamaños de CSS
     const getScrollAmount = () => {
-      if (window.innerWidth < 768) return window.innerWidth * 0.85; 
-      if (window.innerWidth < 1024) return window.innerWidth * 0.45;
-      return window.innerWidth * 0.33; 
+      if (window.innerWidth < 768) return window.innerWidth * 0.85; // Móvil: 1 foto
+      if (window.innerWidth < 1024) return window.innerWidth * 0.40; // Tablet: 2 fotos y un fragmento
+      return window.innerWidth * 0.28; // PC: 3 fotos y un fragmento
     };
 
-    // Avanza una imagen o regresa al principio si ya está al final
     const scrollNext = () => {
+      // Le damos un margen de error de 10px para detectar el final de forma segura
       if (track.scrollLeft >= (track.scrollWidth - track.clientWidth - 10)) {
         track.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
@@ -109,7 +96,7 @@ const carouselPhotos = Object.entries(imageFiles).map(([path, mod]) => mod.defau
 
     const pauseAutoPlay = () => clearInterval(autoPlayInterval);
     const startAutoPlay = () => {
-      clearInterval(autoPlayInterval); // Evita duplicar el temporizador
+      clearInterval(autoPlayInterval);
       autoPlayInterval = setInterval(scrollNext, 3500);
     };
 

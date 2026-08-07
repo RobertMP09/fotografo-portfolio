@@ -109,3 +109,30 @@ const links = [
 
   document.addEventListener('astro:page-load', initNavbar);
 </script>
+
+<!-- Usamos is:global para que el scroll de la derecha cambie en toda la página -->
+<style is:global>
+  /* --- SCROLL VERTICAL PRINCIPAL DE LA PÁGINA (A la derecha) --- */
+  ::-webkit-scrollbar {
+    width: 6px; /* Lo hace mucho más delgado */
+  }
+  ::-webkit-scrollbar-track {
+    background: #0D0D0D; /* Fondo oscuro que se funde con tu diseño */
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #333; /* Un gris sutil para la barra */
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #666; /* Brilla un poco al pasar el mouse */
+  }
+
+  /* --- Ocultamos el scroll horizontal feo del carrusel --- */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

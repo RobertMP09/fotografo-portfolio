@@ -1,24 +1,26 @@
 ---
 import { Image } from 'astro:assets';
-// Reemplaza esto con la ruta de la foto que quieras de fondo
+// Asegúrate de que la ruta coincida con tu imagen
 import heroImage from '../assets/hero-main.jpg'; 
 ---
 
-<section class="relative w-full h-[100dvh] flex items-center justify-center overflow-hidden">
+<!-- Cambiamos h-[100dvh] por h-[100svh] para anclar el fondo -->
+<section class="relative w-full h-[100svh] flex items-center justify-center overflow-hidden">
+  
   <!-- Contenedor de la Imagen de Fondo -->
   <div class="absolute inset-0 w-full h-full z-0">
     <Image 
       src={heroImage} 
       alt="Roberto Melchi Fotografía" 
-      class="w-full h-full object-cover object-center"
+      class="w-full h-full object-cover object-top"
       loading="eager"
     />
     <!-- Overlay: Capa oscura para asegurar que las letras blancas siempre se lean bien -->
     <div class="absolute inset-0 bg-black/40"></div>
   </div>
 
-  <!-- Contenido Central (Textos) -->
-  <div class="relative z-10 flex flex-col items-center text-center px-6 mt-16 reveal">
+  <!-- Contenido Central (Se eliminó la clase 'reveal' para evitar movimientos) -->
+  <div class="relative z-10 flex flex-col items-center text-center px-6 mt-16">
     <h1 class="text-ivory text-4xl md:text-6xl lg:text-7xl tracking-[0.15em] uppercase mb-4 drop-shadow-lg">
       Roberto Melchi
     </h1>
