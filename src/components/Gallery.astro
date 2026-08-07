@@ -37,17 +37,19 @@ const categories = ['todos', 'bodas', 'retratos', 'eventos'];
     ))}
   </div>
 
-  <div id="masonry-grid" class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+  <!-- Cambiamos a CSS Grid (grid-cols-X) que llena de izquierda a derecha -->
+  <div id="photo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {photos.map((photo) => (
       <button
-        class="gallery-item group block w-full break-inside-avoid reveal overflow-hidden cursor-zoom-in"
+        class="gallery-item group block w-full h-full reveal overflow-hidden cursor-zoom-in"
         data-category={photo.category}
         data-alt={photo.alt}
       >
+        <!-- Agregamos 'h-full' para asegurar que la imagen llene la celda por completo -->
         <Image 
           src={photo.src} 
           alt={photo.alt} 
-          class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" 
+          class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105" 
           loading="lazy" 
           widths={[300, 600, 900]} 
           sizes="(max-width: 768px) 100vw, 33vw" 
