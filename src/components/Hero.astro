@@ -1,55 +1,29 @@
 ---
 import { Image } from 'astro:assets';
-import heroImage from '../assets/hero-main.jpg';
+// Reemplaza esto con la ruta de la foto que quieras de fondo
+import heroImage from '../assets/hero-main.jpg'; 
 ---
-<section class="relative min-h-screen pt-32 pb-16 px-6 md:px-10 grid grid-cols-1 md:grid-cols-12 gap-6 overflow-hidden">
-  <div class="md:col-span-7 flex flex-col justify-center reveal">
-    <p class="uppercase tracking-editorial text-platinum text-sm mb-4">Fotografía · Bodas · Retrato · Eventos</p>
-    <h1 class="editorial-heading text-6xl md:text-8xl leading-[0.95] text-ivory">
-      Instantes que <em class="italic text-platinum">permanecen</em>
-    </h1>
-    <p class="mt-6 max-w-md text-ivory/70 text-lg">
-      Un archivo visual construido con luz, silencio y composición. Cada sesión es una narrativa editorial hecha a medida.
-    </p>
-    <a href="/galeria" class="mt-8 inline-block w-fit border-b border-platinum pb-1 text-sm uppercase tracking-widest hover:text-platinum transition-colors">
-      Ver Galería →
-    </a>
+
+<section class="relative w-full h-[100dvh] flex items-center justify-center overflow-hidden">
+  <!-- Contenedor de la Imagen de Fondo -->
+  <div class="absolute inset-0 w-full h-full z-0">
+    <Image 
+      src={heroImage} 
+      alt="Roberto Melchi Fotografía" 
+      class="w-full h-full object-cover object-center"
+      loading="eager"
+    />
+    <!-- Overlay: Capa oscura para asegurar que las letras blancas siempre se lean bien -->
+    <div class="absolute inset-0 bg-black/40"></div>
   </div>
 
-  <div class="md:col-span-5 relative reveal">
-    <div class="hero-parallax relative aspect-[3/4] w-full overflow-hidden">
-      <Image
-        src={heroImage}
-        alt="Retrato editorial en blanco y negro"
-        class="hero-img absolute inset-0 w-full h-full object-cover"
-        loading="eager"
-        widths={[400, 800, 1200]}
-        sizes="(max-width: 768px) 100vw, 40vw"
-      />
-    </div>
+  <!-- Contenido Central (Textos) -->
+  <div class="relative z-10 flex flex-col items-center text-center px-6 mt-16 reveal">
+    <h1 class="text-ivory text-4xl md:text-6xl lg:text-7xl tracking-[0.15em] uppercase mb-4 drop-shadow-lg">
+      Roberto Melchi
+    </h1>
+    <p class="text-platinum text-xs md:text-sm tracking-[0.4em] uppercase drop-shadow-md">
+      Fotógrafo de Retratos
+    </p>
   </div>
 </section>
-
-<script>
-  import { gsap } from 'gsap';
-
-  function initParallax() {
-    const img = document.querySelector('.hero-img');
-    if (!img) return;
-    gsap.fromTo(
-      img,
-      { y: -40 },
-      {
-        y: 40,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: img,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        },
-      }
-    );
-  }
-  document.addEventListener('astro:page-load', initParallax);
-</script>

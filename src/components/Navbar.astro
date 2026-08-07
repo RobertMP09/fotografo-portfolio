@@ -6,38 +6,39 @@ const links = [
   { href: '/contacto', label: 'Contacto' },
 ];
 ---
-<!-- HEADER (Menú principal de arriba) -->
-<header class="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-[#0D0D0D]/90 border-b border-platinum/10">
+<!-- HEADER -->
+<header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-transparent border-transparent">
   <div class="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-10 py-5">
-    <a href="/" class="editorial-heading text-2xl tracking-editorial uppercase text-ivory">
-      Roberto Melchi <span class="text-platinum">/ Fotógrafo</span>
+    
+    <a href="/" class="editorial-heading text-2xl tracking-editorial uppercase text-white">
+      Roberto Melchi
     </a>
 
     <!-- Menú Escritorio -->
-    <nav class="hidden md:flex items-center gap-10 text-sm uppercase tracking-widest text-ivory/80">
+    <nav class="hidden md:flex items-center gap-10 text-sm uppercase tracking-widest text-white/90">
       {links.map((link) => (
-        <a href={link.href} class="hover:text-platinum transition-colors duration-300">
+        <a href={link.href} class="hover:text-gray-300 transition-colors duration-300">
           {link.label}
         </a>
       ))}
     </nav>
 
     <!-- Botón Hamburguesa Móvil -->
-    <button id="mobile-menu-toggle" class="md:hidden text-ivory p-2 focus:outline-none" aria-label="Abrir menú">
-      <svg id="icon-open" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <button id="mobile-menu-toggle" class="md:hidden text-white p-2 focus:outline-none" aria-label="Abrir menú">
+      <svg id="icon-open" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
       </svg>
-      <svg id="icon-close" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <svg id="icon-close" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>
   </div>
 </header>
 
-<!-- MENÚ MÓVIL (Ahora está AFUERA del header para evitar el bug del navegador) -->
+<!-- MENÚ MÓVIL -->
 <nav id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-[100dvh] bg-[#0D0D0D] pt-32 px-6 flex-col items-center gap-10 z-40">
   {links.map((link) => (
-    <a href={link.href} class="mobile-link text-2xl uppercase tracking-widest text-ivory/90 hover:text-white transition-colors duration-300">
+    <a href={link.href} class="mobile-link text-2xl uppercase tracking-widest text-white hover:text-gray-300 transition-colors duration-300">
       {link.label}
     </a>
   ))}
@@ -45,6 +46,30 @@ const links = [
 
 <script>
   function initNavbar() {
+    const header = document.getElementById('main-header');
+    
+    // --- NUEVO: Lógica para el fondo al hacer scroll ---
+    const handleScroll = () => {
+      // Si el usuario bajó más de 50 pixeles...
+      if (window.scrollY > 50) {
+        // Quitamos la transparencia
+        header?.classList.remove('bg-transparent', 'border-transparent');
+        // Agregamos el fondo oscuro, desenfoque y borde
+        header?.classList.add('bg-[#0D0D0D]/90', 'backdrop-blur-md', 'border-b', 'border-white/10');
+      } else {
+        // Si está hasta arriba, lo devolvemos a transparente
+        header?.classList.add('bg-transparent', 'border-transparent');
+        header?.classList.remove('bg-[#0D0D0D]/90', 'backdrop-blur-md', 'border-b', 'border-white/10');
+      }
+    };
+
+    // Escuchamos cada que el usuario hace scroll
+    window.addEventListener('scroll', handleScroll);
+    
+    // Ejecutamos la función una vez al cargar por si el usuario recarga a mitad de página
+    handleScroll();
+
+    // --- Lógica del menú móvil (se mantiene igual) ---
     const toggleBtn = document.getElementById('mobile-menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const iconOpen = document.getElementById('icon-open');
@@ -55,7 +80,6 @@ const links = [
 
     const toggleMenu = () => {
       const isHidden = mobileMenu.classList.contains('hidden');
-      
       if (isHidden) {
         mobileMenu.classList.remove('hidden');
         mobileMenu.classList.add('flex');
@@ -71,7 +95,6 @@ const links = [
       }
     };
 
-    // Quitamos los event listeners anteriores si los hubiera (útil en Astro View Transitions)
     toggleBtn.removeEventListener('click', toggleMenu);
     toggleBtn.addEventListener('click', toggleMenu);
 
