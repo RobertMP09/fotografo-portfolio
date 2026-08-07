@@ -3,29 +3,91 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Services from '../components/Services.astro';
-import aboutImage from '../assets/about-portrait.jpg';
+
+// Cargamos dinámicamente las fotos de la galería para el carrusel
+const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/gallery/*.{jpeg,jpg,png,webp}',
+  { eager: true }
+);
+
+// Obtenemos solo los objetos de imagen
+const carouselPhotos = Object.entries(imageFiles).map(([path, mod]) => mod.default);
 ---
 <Layout title="Inicio">
   <Hero />
 
-  <section class="px-6 md:px-10 py-24 grid md:grid-cols-2 gap-12">
-    <div class="reveal">
-      <p class="uppercase tracking-editorial text-platinum text-sm mb-4">Sobre mí</p>
-      <h2 class="editorial-heading text-4xl md:text-5xl leading-tight mb-6">
-        Diez años documentando historias reales
-      </h2>
-      <p class="text-ivory/70 leading-relaxed">
-        Mi trabajo combina la estética del fotoperiodismo con la sensibilidad editorial de una revista de moda.
-        Cada boda, retrato o evento se convierte en un ensayo visual con luz natural y composición asimétrica.
-      </p>
+  <!-- CARRUSEL ESTILO EDITORIAL -->
+  <section class="relative w-full py-12 bg-[#0D0D0D] group/section">
+    
+    <!-- Botón Anterior (Se muestra solo en escritorio al hacer hover) -->
+    <button id="prev-slide" class="absolute left-6 top-1/2 -translate-y-1/2 z-10 bg-[#0D0D0D]/70 hover:bg-platinum hover:text-carbon text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 opacity-0 group-hover/section:opacity-100 hidden md:block outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path></svg>
+    </button>
+
+    <!-- Contenedor del Carrusel -->
+    <!-- Se usa snap-x para que las fotos se "imanten" al centro al hacer scroll -->
+    <div id="carousel-track" class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-1 px-4 md:px-10">
+      {carouselPhotos.map((photo, index) => (
+        <div class="snap-center shrink-0 w-[85vw] md:w-[45vw] lg:w-[33vw] h-[60vh] md:h-[75vh] relative group cursor-grab active:cursor-grabbing">
+          <Image 
+            src={photo} 
+            alt={`Fotografía destacada ${index + 1}`} 
+            class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700" 
+            loading="lazy" 
+            widths={[400, 800, 1200]} 
+            sizes="(max-width: 768px) 85vw, 33vw" 
+          />
+        </div>
+      ))}
     </div>
-    <div class="reveal">
-      <Image src={aboutImage} alt="Fotógrafo en sesión" class="w-full h-full object-cover" loading="lazy" widths={[400, 800]} sizes="(max-width: 768px) 100vw, 50vw" />
-    </div>
+
+    <!-- Botón Siguiente -->
+    <button id="next-slide" class="absolute right-6 top-1/2 -translate-y-1/2 z-10 bg-[#0D0D0D]/70 hover:bg-platinum hover:text-carbon text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 opacity-0 group-hover/section:opacity-100 hidden md:block outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path></svg>
+    </button>
+
   </section>
 
-  <section class="px-6 md:px-10 pb-12 reveal">
+  <section class="px-6 md:px-10 pb-12 pt-24 reveal">
     <h2 class="editorial-heading text-4xl mb-8">Servicios destacados</h2>
   </section>
   <Services />
 </Layout>
+
+<style>
+  /* Ocultamos la barra de desplazamiento fea del navegador pero mantenemos la función de scroll */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script>
+  function initCarousel() {
+    const track = document.getElementById('carousel-track');
+    const prevBtn = document.getElementById('prev-slide');
+    const nextBtn = document.getElementById('next-slide');
+
+    if (!track || !prevBtn || !nextBtn) return;
+
+    // Calculamos cuánto desplazar el carrusel basándonos en el tamaño de la pantalla
+    const getScrollAmount = () => {
+      if (window.innerWidth < 768) return window.innerWidth * 0.85; 
+      if (window.innerWidth < 1024) return window.innerWidth * 0.45;
+      return window.innerWidth * 0.33; 
+    };
+
+    nextBtn.addEventListener('click', () => {
+      track.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener('click', () => {
+      track.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initCarousel);
+</script>
