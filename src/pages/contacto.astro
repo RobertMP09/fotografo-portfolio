@@ -13,10 +13,11 @@ import Layout from '../layouts/Layout.astro';
       
       <div>
         <label class="block uppercase text-xs tracking-widest text-ivory/60 mb-2">Tipo de sesión</label>
-        <select name="type" class="w-full bg-transparent border-b border-platinum/40 py-3 focus:border-platinum outline-none">
-          <option value="boda">Boda</option>
-          <option value="retrato">Retrato</option>
-          <option value="evento">Evento</option>
+        <select name="type" class="w-full bg-transparent border-b border-platinum/40 py-3 focus:border-platinum outline-none text-white">
+          <!-- Le añadimos text-black a cada opción para que el texto sea oscuro sobre el fondo claro del navegador -->
+          <option value="boda" class="text-black">Boda</option>
+          <option value="retrato" class="text-black">Retrato</option>
+          <option value="evento" class="text-black">Evento</option>
         </select>
       </div>
       
