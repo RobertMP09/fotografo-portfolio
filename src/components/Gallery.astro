@@ -25,10 +25,14 @@ const photos = Object.entries(imageFiles).map(([path, mod]) => {
 const categories = ['todos', 'bodas', 'retratos', 'eventos'];
 ---
 <section class="px-6 md:px-10 pt-32 pb-24">
-  <div class="flex flex-wrap gap-6 mb-12 reveal">
+  
+  <!-- CONTENEDOR DE BOTONES (Píldoras) -->
+  <div class="flex flex-wrap items-center justify-center gap-4 mb-12 reveal">
     {categories.map((cat) => (
       <button
-        class="filter-btn uppercase text-sm tracking-widest text-ivory/60 hover:text-platinum data-[active=true]:text-platinum data-[active=true]:border-b border-platinum pb-1 transition-colors outline-none"
+        class="filter-btn uppercase text-xs tracking-widest px-6 py-2.5 rounded-full border transition-all duration-300 outline-none
+               text-ivory/60 border-white/10 hover:border-platinum hover:text-platinum 
+               data-[active=true]:bg-platinum data-[active=true]:text-carbon data-[active=true]:border-platinum"
         data-filter={cat}
         data-active={cat === 'todos' ? 'true' : 'false'}
       >
@@ -37,28 +41,36 @@ const categories = ['todos', 'bodas', 'retratos', 'eventos'];
     ))}
   </div>
 
-  <!-- Cambiamos a CSS Grid (grid-cols-X) que llena de izquierda a derecha -->
-  <div id="photo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <!-- NUEVO CONTENEDOR GRID UNIFORME Y ELEGANTE -->
+  <div id="photo-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     {photos.map((photo) => (
       <button
-        class="gallery-item group block w-full h-full reveal overflow-hidden cursor-zoom-in"
+        class="gallery-item group relative block w-full aspect-[4/5] reveal overflow-hidden cursor-zoom-in rounded-sm"
         data-category={photo.category}
         data-alt={photo.alt}
       >
-        <!-- Agregamos 'h-full' para asegurar que la imagen llene la celda por completo -->
+        <!-- Cambiamos a w-full, h-full y object-cover para que el grid sea perfecto -->
         <Image 
           src={photo.src} 
           alt={photo.alt} 
-          class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105" 
+          class="w-full h-full object-cover transform transition-all duration-700 group-hover:scale-110 group-hover:blur-[2px]" 
           loading="lazy" 
           widths={[300, 600, 900]} 
-          sizes="(max-width: 768px) 100vw, 33vw" 
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" 
         />
+        
+        <!-- Capa oscura superior con el texto revelado -->
+        <div class="absolute inset-0 bg-carbon/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center justify-center pointer-events-none z-10">
+          <span class="text-white text-xs tracking-[0.4em] uppercase translate-y-4 group-hover:translate-y-0 transition-transform duration-500 drop-shadow-lg">
+            {photo.category}
+          </span>
+          <div class="w-8 h-[1px] bg-white mt-3 scale-x-0 group-hover:scale-x-100 transition-transform duration-700 delay-100"></div>
+        </div>
       </button>
     ))}
   </div>
 
-  <!-- Se agregó backdrop-blur-sm para un efecto cristal elegante de fondo -->
+  <!-- Lightbox -->
   <div id="lightbox" class="fixed inset-0 bg-carbon/95 backdrop-blur-sm hidden items-center justify-center z-[100] p-6 transition-opacity" role="dialog" aria-modal="true">
     <button id="lightbox-close" class="absolute top-6 right-6 text-ivory text-4xl hover:text-white transition-colors outline-none" aria-label="Cerrar">&times;</button>
     <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl" />
@@ -73,24 +85,32 @@ const categories = ['todos', 'bodas', 'retratos', 'eventos'];
     const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
     const closeBtn = document.getElementById('lightbox-close');
 
-    // Lógica de filtrado
+    // Lógica de filtrado con View Transitions API
     buttons.forEach((btn) => {
       btn.addEventListener('click', () => {
         const filter = btn.dataset.filter;
         
-        // Actualizar estado visual de los botones
         buttons.forEach((b) => (b.dataset.active = 'false'));
         btn.dataset.active = 'true';
         
-        // Mostrar/Ocultar imágenes
-        items.forEach((item) => {
-          const show = filter === 'todos' || item.dataset.category === filter;
-          (item as HTMLElement).style.display = show ? 'block' : 'none';
-        });
+        // Función que modifica el DOM
+        const updateDOM = () => {
+          items.forEach((item) => {
+            const show = filter === 'todos' || item.dataset.category === filter;
+            (item as HTMLElement).style.display = show ? 'block' : 'none';
+          });
+        };
+
+        // Magia: Si el navegador soporta View Transitions, anima el cambio
+        if (document.startViewTransition) {
+          document.startViewTransition(updateDOM);
+        } else {
+          updateDOM(); // Fallback para navegadores antiguos
+        }
       });
     });
 
-    // Lógica para abrir el Lightbox
+    // Lógica Lightbox
     items.forEach((item) => {
       item.addEventListener('click', () => {
         if (!lightbox || !lightboxImg) return;
@@ -100,38 +120,33 @@ const categories = ['todos', 'bodas', 'retratos', 'eventos'];
         
         lightbox.classList.remove('hidden');
         lightbox.classList.add('flex');
-        
-        // Evita que la página del fondo haga scroll cuando el lightbox está abierto
         document.body.style.overflow = 'hidden'; 
       });
     });
 
-    // Función unificada para cerrar el Lightbox
     const closeLightbox = () => {
       if (!lightbox) return;
       lightbox.classList.add('hidden');
       lightbox.classList.remove('flex');
-      document.body.style.overflow = ''; // Devuelve el scroll a la normalidad
+      document.body.style.overflow = ''; 
     };
 
-    // 1. Cerrar al dar clic en la X
     closeBtn?.addEventListener('click', closeLightbox);
-
-    // 2. Cerrar al dar clic en el fondo oscuro
     lightbox?.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        closeLightbox();
-      }
+      if (e.target === lightbox) closeLightbox();
     });
-
-    // 3. Cerrar al presionar la tecla Escape
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !lightbox?.classList.contains('hidden')) {
-        closeLightbox();
-      }
+      if (e.key === 'Escape' && !lightbox?.classList.contains('hidden')) closeLightbox();
     });
   }
 
-  // Asegurar que funcione correctamente con las transiciones de Astro
   document.addEventListener('astro:page-load', initGallery);
 </script>
+
+<style is:global>
+  /* Le da suavidad a las animaciones de la View Transition API */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.5s;
+  }
+</style>
