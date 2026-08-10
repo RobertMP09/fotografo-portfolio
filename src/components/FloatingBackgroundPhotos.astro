@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+
+const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/gallery/*.{jpeg,jpg,png,webp}',
+  { eager: true }
+);
+
+const basePhotos = Object.entries(imageFiles).map(([_, mod]) => mod.default);
+// Duplicamos el arreglo para garantizar el efecto de scroll continuo sin cortes
+const photos = [...basePhotos, ...basePhotos];
+---
+<div class="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-15 blur-[2px]">
+  <div class="absolute flex w-max animate-marquee gap-8 py-4">
+    {photos.map((photo, index) => (
+      <div class="w-72 md:w-96 h-[30rem] relative rounded-lg overflow-hidden shrink-0 transform rotate-[-3deg] scale-105">
+        <Image src={photo} alt={`Background ambient ${index}`} class="w-full h-full object-cover" />
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee 35s linear infinite;
+  }
+  /* Si el usuario prefiere reducir el movimiento por accesibilidad, se detiene */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee {
+      animation-play-state: paused;
+    }
+  }
+</style>
