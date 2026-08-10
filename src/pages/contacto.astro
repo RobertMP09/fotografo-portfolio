@@ -48,15 +48,20 @@ import contactBg from '../assets/gallery/portada-contacto.jpg';
   </div>
 
   <script>
-    const btnScroll = document.querySelector('a[href="#formulario-contacto"]');
-    if (btnScroll) {
-      btnScroll.addEventListener('click', (e) => {
-        e.preventDefault(); 
-        const formSection = document.getElementById('formulario-contacto');
-        if (formSection) {
-          formSection.scrollIntoView({ behavior: 'smooth' }); 
-        }
-      });
+    function initScrollButton() {
+      const btnScroll = document.querySelector('a[href="#formulario-contacto"]');
+      if (btnScroll) {
+        btnScroll.addEventListener('click', (e) => {
+          e.preventDefault(); 
+          const formSection = document.getElementById('formulario-contacto');
+          if (formSection) {
+            formSection.scrollIntoView({ behavior: 'smooth' }); 
+          }
+        });
+      }
     }
+    
+    // De nuevo, obligamos a Astro a escuchar el evento de carga de vista
+    document.addEventListener('astro:page-load', initScrollButton);
   </script>
 </Layout>

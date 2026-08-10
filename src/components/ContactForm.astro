@@ -27,22 +27,24 @@
 </form>
 
 <script>
-  const form = document.getElementById('contact-form') as HTMLFormElement;
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault(); 
-      
-      const formData = new FormData(form);
-      const name = formData.get('name');
-      const type = formData.get('type');
-      const message = formData.get('message');
-      
-      const waMessage = `¡Hola! Mi nombre es ${name}.\n\nMe interesa reservar una sesión para: *${type}*.\n\nMensaje: ${message}`;
-      const phoneNumber = '524112301946';
-      
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(waMessage)}`;
-      
-      window.location.href = whatsappUrl;
-    });
+  function initContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault(); 
+        const formData = new FormData(form);
+        const name = formData.get('name');
+        const type = formData.get('type');
+        const message = formData.get('message');
+        
+        const waMessage = `¡Hola! Mi nombre es ${name}.\n\nMe interesa reservar una sesión para: *${type}*.\n\nMensaje: ${message}`;
+        const phoneNumber = '524112301946'; 
+        
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(waMessage)}`;
+        
+        window.location.href = whatsappUrl;
+      });
+    }
   }
+  document.addEventListener('astro:page-load', initContactForm);
 </script>
