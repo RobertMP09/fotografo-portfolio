@@ -69,9 +69,10 @@ const faqs = [
   {packages.map((pkg) => (
     <article class="reveal group relative border border-platinum/20 p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:border-platinum">
       {/* Imagen de fondo con filtro de oscurecimiento */}
-      <div 
-  class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-110 group-hover:opacity-65" 
-  style={`background-image: url('${pkg.image}');`}
+      {/* Cambia la línea del div de la imagen por esta: */}
+<div 
+  class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-50 group-hover:opacity-65" 
+  style={`background-image: url('${typeof pkg.image === 'object' ? pkg.image.src : pkg.image}');`}
 ></div>
       <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40"></div>
 
