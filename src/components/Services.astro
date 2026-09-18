@@ -1,36 +1,109 @@
 ---
 const packages = [
   {
-    name: 'Boda',
-    price: 'Desde $',
-    features: ['', '', '', ''],
+    name: 'COTIZACIONES Y COLABORACIONES',
+    price: 'A Cotizar',
+    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop',
+    features: [
+      'Los eventos, colaboraciones u otros servicios se contestarán de manera personal dependiendo de las necesidades de tu servicio requerido.'
+    ],
   },
   {
-    name: 'Sesión de Retrato',
-    price: 'Desde $',
-    features: ['', '', '', ''],
-  
+    name: 'PAQUETES DE RETRATO',
+    price: 'Desde $800',
+    image: '/src/assets/gallery/IMG_5993.jpg',
+    features: [
+      'Paquete Básico: 12 fotos por $800',
+      'Paquete Mediano: 20 fotos por $1,200',
+      'Paquete Grande: 30 fotos por $1,800',
+    ],
   },
   {
-    name: 'Cobertura de Evento',
-    price: 'Desde $',
-    features: ['', '', '', ''],
+    name: 'PAQUETES DE BODA',
+    price: 'Desde $4,200',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
+    features: [
+      'Paquete Bronce: $4,200 (Hasta 5 horas de evento + boda civil. Fotos ilimitadas. Entrega digital)',
+      'Paquete Plata: Consultar detalles',
+      'Paquete Oro: Consultar detalles',
+    ],
+  },
+];
+
+const faqs = [
+  {
+    question: '¿Con cuánto tiempo de anticipación debo reservar?',
+    answer: 'Para bodas y eventos grandes se recomienda reservar con 3 a 6 meses de anticipación. Para sesiones de retrato, de 1 a 2 semanas es suficiente.',
+  },
+  {
+    question: '¿Cómo y cuándo se entregan las fotografías?',
+    answer: 'Las imágenes se entregan en alta resolución a través de una galería digital privada. El tiempo estimado de entrega es de 4 a 15 días hábiles.',
+  },
+  {
+    question: '¿Realizas impresiones o fotolibros?',
+    answer: 'Sí, contamos con servicios adicionales de impresión profesional y diseño de fotolibros en pasta dura bajo pedido.',
+  },
+  {
+    question: '¿Qué método de pago aceptas?',
+    answer: 'Aceptamos transferencias bancarias y pago en efectivo. Se requiere un anticipo del 30% para apartar la fecha.',
+  },
+  {
+    question: '¿Ofreces servicios fuera de la ciudad?',
+    answer: 'Sí, realizamos sesiones y coberturas en otras ciudades. Los costos de transporte y alojamiento se cotizan aparte.',
+  },
+  {
+    question: '¿Puedo solicitar un estilo específico de fotografía?',
+    answer: 'Claro, durante la consulta previa podemos discutir tus preferencias y estilo deseado para asegurarnos de que las fotos reflejen tu visión.',
+  },
+  {
+    question: '¿Cual es tu política de reembolso?',
+    answer: 'En caso de cancelación, el anticipo no es reembolsable. Sin embargo, podemos reprogramar la sesión o cobertura según disponibilidad.',
   },
 ];
 ---
-<section class="px-6 md:px-10 py-24 grid md:grid-cols-3 gap-8">
+
+<!-- Sección de Paquetes con Imagen de Fondo -->
+<section class="px-6 md:px-10 py-16 grid md:grid-cols-3 gap-8">
   {packages.map((pkg) => (
-    <article class="reveal border border-platinum/20 p-8 flex flex-col justify-between hover:border-platinum transition-colors duration-300">
-      <div>
+    <article class="reveal group relative border border-platinum/20 p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:border-platinum">
+      {/* Imagen de fondo con filtro de oscurecimiento */}
+      <div 
+  class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-110 group-hover:opacity-65" 
+  style={`background-image: url('${pkg.image}');`}
+></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40"></div>
+
+      {/* Contenido principal */}
+      <div class="relative z-10">
         <h3 class="editorial-heading text-3xl mb-2 text-ivory">{pkg.name}</h3>
-        <p class="text-platinum text-sm uppercase tracking-widest mb-6">{pkg.price}</p>
-        <ul class="space-y-3 text-ivory/70 text-sm">
+        <p class="text-platinum text-sm uppercase tracking-widest mb-6 font-semibold">{pkg.price}</p>
+        <ul class="space-y-3 text-ivory/80 text-sm">
           {pkg.features.map((f) => <li>— {f}</li>)}
         </ul>
       </div>
-      <a href="/contacto" class="mt-10 inline-block text-center border border-platinum py-3 uppercase text-sm tracking-widest hover:bg-platinum hover:text-carbon transition-colors duration-300">
-      Reservar Ahora
+
+      <a 
+        href="/contacto" 
+        class="relative z-10 mt-10 inline-block text-center border border-platinum py-3 uppercase text-sm tracking-widest text-ivory hover:bg-platinum hover:text-carbon transition-colors duration-300"
+      >
+        Reservar Ahora
       </a>
     </article>
   ))}
+</section>
+
+<!-- Sección de Preguntas Frecuentes (FAQ) -->
+<section class="px-6 md:px-10 py-20 border-t border-platinum/10">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="editorial-heading text-4xl md:text-5xl text-ivory mb-12 text-center">Preguntas Frecuentes</h2>
+    
+    <div class="space-y-8">
+      {faqs.map((faq) => (
+        <div class="border-b border-platinum/10 pb-6">
+          <h3 class="text-xl text-ivory font-medium mb-3">{faq.question}</h3>
+          <p class="text-ivory/70 text-sm leading-relaxed">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
 </section>
