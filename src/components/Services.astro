@@ -4,26 +4,32 @@ import imgRetrato from '../assets/gallery/IMG_5993.jpg';
 
 const packages = [
   {
+    id: 'colaboraciones',
     name: 'COTIZACIONES Y COLABORACIONES',
     price: 'A Cotizar',
+    badge: 'PERSONALIZADO',
     image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop',
     features: [
       'Los eventos, colaboraciones u otros servicios se contestarán de manera personal dependiendo de las necesidades de tu servicio requerido.'
     ],
   },
   {
+    id: 'retrato',
     name: 'PAQUETES DE RETRATO',
     price: 'Desde $800',
+    badge: 'RECOMENDADO',
     image: imgRetrato,
     features: [
       'Paquete Básico: 12 fotos por $800',
-      'Paquete Mediano: 20 fotos por $1,200',
-      'Paquete Grande: 30 fotos por $1,800',
+      'Paquete Mediano: 22 fotos por $1,250',
+      'Paquete Grande: 35 fotos por $1,600',
     ],
   },
   {
+    id: 'bodas',
     name: 'PAQUETES DE BODA',
     price: 'Desde $4,200',
+    badge: 'MÁS POPULAR',
     image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
     features: [
       'Paquete Bronce: $4,200 (Hasta 5 horas de evento + boda civil. Fotos ilimitadas. Entrega digital)',
@@ -65,10 +71,10 @@ const faqs = [
 ];
 ---
 
-<!-- Sección de Paquetes con Imagen de Fondo -->
+<!-- Sección de Paquetes Verticales -->
 <section class="px-6 md:px-10 py-16 grid md:grid-cols-3 gap-8">
   {packages.map((pkg) => (
-    <article class="reveal group relative border border-platinum/20 p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:border-platinum">
+    <article class="reveal group relative border border-platinum/20 p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:border-platinum min-h-[550px]">
       {/* Imagen de fondo */}
       <div 
         class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-50 group-hover:opacity-70" 
@@ -76,7 +82,16 @@ const faqs = [
       ></div>
 
       {/* Degradado para mantener legibilidad del texto */}
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
+
+      {/* Badge / Etiqueta destacada */}
+      {pkg.badge && (
+        <div class="relative z-10 self-end mb-2">
+          <span class="bg-platinum/20 backdrop-blur-md border border-platinum/30 text-ivory text-[10px] uppercase tracking-widest px-3 py-1 font-semibold">
+            {pkg.badge}
+          </span>
+        </div>
+      )}
 
       {/* Contenido principal */}
       <div class="relative z-10">
@@ -87,8 +102,9 @@ const faqs = [
         </ul>
       </div>
 
+      {/* CTA Dinámico */}
       <a 
-        href="/contacto" 
+        href={`/contacto?servicio=${encodeURIComponent(pkg.id)}`} 
         class="relative z-10 mt-10 inline-block text-center border border-platinum py-3 uppercase text-sm tracking-widest text-ivory hover:bg-platinum hover:text-carbon transition-colors duration-300"
       >
         Reservar Ahora
@@ -97,17 +113,22 @@ const faqs = [
   ))}
 </section>
 
-<!-- Sección de Preguntas Frecuentes (FAQ) -->
+<!-- Sección de Preguntas Frecuentes (FAQ - Acordeón) -->
 <section class="px-6 md:px-10 py-20 border-t border-platinum/10">
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-3xl mx-auto">
     <h2 class="editorial-heading text-4xl md:text-5xl text-ivory mb-12 text-center">Preguntas Frecuentes</h2>
     
-    <div class="space-y-8">
+    <div class="space-y-4">
       {faqs.map((faq) => (
-        <div class="border-b border-platinum/10 pb-6">
-          <h3 class="text-xl text-ivory font-medium mb-3">{faq.question}</h3>
-          <p class="text-ivory/70 text-sm leading-relaxed">{faq.answer}</p>
-        </div>
+        <details class="group border-b border-platinum/10 pb-4 cursor-pointer transition-all">
+          <summary class="flex justify-between items-center text-lg md:text-xl text-ivory font-medium list-none py-2 hover:text-platinum transition-colors select-none">
+            <span>{faq.question}</span>
+            <span class="transition-transform duration-300 group-open:rotate-45 text-2xl text-platinum/70 ml-4">+</span>
+          </summary>
+          <p class="text-ivory/70 text-sm leading-relaxed mt-2 pr-6">
+            {faq.answer}
+          </p>
+        </details>
       ))}
     </div>
   </div>

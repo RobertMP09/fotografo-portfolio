@@ -8,10 +8,11 @@
   
   <div>
     <label class="block uppercase text-xs tracking-widest text-ivory/60 mb-2">Tipo de sesión</label>
-    <select name="type" class="w-full bg-white/5 backdrop-blur-md border border-platinum/40 py-3 px-3 rounded-sm focus:border-platinum outline-none text-white cursor-pointer transition-colors">
-      <option value="boda" class="text-black bg-white">Boda</option>
+    <!-- Se añade id="session-type" y valores en minúsculas coincidentes con los IDs de paquetes -->
+    <select id="session-type" name="type" class="w-full bg-white/5 backdrop-blur-md border border-platinum/40 py-3 px-3 rounded-sm focus:border-platinum outline-none text-white cursor-pointer transition-colors">
       <option value="retrato" class="text-black bg-white">Retrato</option>
-      <option value="evento" class="text-black bg-white">Evento</option>
+      <option value="bodas" class="text-black bg-white">Boda</option>
+      <option value="colaboraciones" class="text-black bg-white">Cotizaciones y Colaboraciones</option>
     </select>
   </div>
   
@@ -28,6 +29,17 @@
 
 <script>
   function initContactForm() {
+    // 1. Lectura del parámetro URL ?servicio=
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedService = urlParams.get('servicio');
+    const selectElement = document.getElementById('session-type') as HTMLSelectElement;
+
+    if (selectedService && selectElement) {
+      // Asigna el valor predeterminado proveniente del botón pulsado
+      selectElement.value = selectedService;
+    }
+
+    // 2. Envío del formulario
     const form = document.getElementById('contact-form') as HTMLFormElement;
     if (form) {
       form.addEventListener('submit', (e) => {
@@ -46,5 +58,6 @@
       });
     }
   }
+
   document.addEventListener('astro:page-load', initContactForm);
 </script>
