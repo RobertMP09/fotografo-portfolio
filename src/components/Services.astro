@@ -1,6 +1,7 @@
 ---
-import { Image} from 'astro:assets';
+import { Image } from 'astro:assets';
 import imgRetrato from '../assets/gallery/IMG_5993.jpg';
+
 const packages = [
   {
     name: 'COTIZACIONES Y COLABORACIONES',
@@ -58,7 +59,7 @@ const faqs = [
     answer: 'Claro, durante la consulta previa podemos discutir tus preferencias y estilo deseado para asegurarnos de que las fotos reflejen tu visión.',
   },
   {
-    question: '¿Cual es tu política de reembolso?',
+    question: '¿Cuál es tu política de reembolso?',
     answer: 'En caso de cancelación, el anticipo no es reembolsable. Sin embargo, podemos reprogramar la sesión o cobertura según disponibilidad.',
   },
 ];
@@ -68,13 +69,14 @@ const faqs = [
 <section class="px-6 md:px-10 py-16 grid md:grid-cols-3 gap-8">
   {packages.map((pkg) => (
     <article class="reveal group relative border border-platinum/20 p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:border-platinum">
-      {/* Imagen de fondo con filtro de oscurecimiento */}
-      {/* Cambia la línea del div de la imagen por esta: */}
-<div 
-  class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-50 group-hover:opacity-65" 
-  style={`background-image: url('${typeof pkg.image === 'object' ? pkg.image.src : pkg.image}');`}
-></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40"></div>
+      {/* Imagen de fondo */}
+      <div 
+        class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-50 group-hover:opacity-70" 
+        style={`background-image: url('${typeof pkg.image === 'object' ? pkg.image.src : pkg.image}');`}
+      ></div>
+
+      {/* Degradado para mantener legibilidad del texto */}
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"></div>
 
       {/* Contenido principal */}
       <div class="relative z-10">
