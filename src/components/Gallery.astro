@@ -22,7 +22,7 @@ const photos = Object.entries(imageFiles).map(([path, mod]) => {
 });
 
 const categoryConfigs = [
-  { id: 'eventos', label: 'EVENTOS', subtitle: '' },
+  { id: 'eventos', label: 'EVENTOS', subtitle: 'Momentos Únicos' },
   { id: 'bodas', label: 'BODAS', subtitle: 'Historias de Amor' },
   { id: 'retratos', label: 'RETRATOS', subtitle: 'Esencia & Editorial' },
 ];
@@ -36,30 +36,29 @@ const categoriesWithCover = categoryConfigs.map((cat) => {
 });
 ---
 
-<!-- Se añade pt-20 / pt-24 para dar espacio suficiente debajo del Navbar global -->
 <section class="w-full min-h-screen bg-black px-4 sm:px-6 pt-24 pb-12">
   
-  <!-- VISTA 1: PORTADAS EDITORIALES EN 3 COLUMNAS -->
-  <div id="hero-columns" class="grid grid-cols-1 md:grid-cols-3 gap-4 h-[78vh] w-full max-w-[1600px] mx-auto">
+  <!-- VISTA 1: PORTADAS EN COLUMNAS (Adaptado a móviles) -->
+  <div id="hero-columns" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[75vh] w-full max-w-[1600px] mx-auto">
     {categoriesWithCover.map((cat) => (
       <button
-        class="category-column group relative w-full h-full overflow-hidden rounded-md cursor-pointer border border-white/10"
+        class="category-column group relative w-full h-[380px] md:h-full overflow-hidden rounded-md cursor-pointer border border-white/10"
         data-category={cat.id}
         data-label={cat.label}
       >
-        <!-- Imagen con zoom al hacer hover -->
+        <!-- Imagen ajustada con object-top para evitar recortar rostros en móvil -->
         <Image 
           src={cat.cover.src} 
           alt={cat.label} 
-          class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" 
+          class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105" 
           loading="eager"
         />
         
-        <!-- Degradado profesional (Oscuro abajo para resaltar texto) -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20 group-hover:via-black/10 transition-colors duration-500"></div>
+        <!-- Degradado -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 group-hover:via-black/10 transition-colors duration-500"></div>
 
-        <!-- Contenido Tipográfico Estilo Editorial/Sebass -->
-        <div class="relative z-10 h-full flex flex-col justify-end p-8 text-left">
+        <!-- Contenido Tipográfico -->
+        <div class="relative z-10 h-full flex flex-col justify-end p-6 md:p-8 text-left">
           <span class="text-xs uppercase tracking-[0.3em] text-white/70 mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
             {cat.subtitle}
           </span>
@@ -75,7 +74,7 @@ const categoriesWithCover = categoryConfigs.map((cat) => {
   <!-- VISTA 2: GALERÍA DE SECCIÓN SELECCIONADA -->
   <div id="section-view" class="hidden flex-col gap-8 max-w-[1600px] mx-auto">
     
-    <!-- Barra Superior con Botón Volver e Indicador -->
+    <!-- Encabezado con Botón Volver -->
     <div class="flex items-center justify-between border-b border-white/10 pb-4">
       <button 
         id="back-to-columns"
@@ -107,7 +106,7 @@ const categoriesWithCover = categoryConfigs.map((cat) => {
     </div>
   </div>
 
-  <!-- Lightbox (Modal Imagen Completa) -->
+  <!-- Lightbox -->
   <div id="lightbox" class="fixed inset-0 bg-black/95 backdrop-blur-md hidden items-center justify-center z-[100] p-6" role="dialog">
     <button id="lightbox-close" class="absolute top-6 right-6 text-white text-4xl outline-none hover:opacity-75 transition-opacity" aria-label="Cerrar">&times;</button>
     <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl" />
